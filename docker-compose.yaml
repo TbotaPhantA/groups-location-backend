@@ -1,0 +1,8 @@
+version: '3'
+
+
+services:
+    postgres:
+        image: postgres:12
+        ports:
+            - 5433:5432
