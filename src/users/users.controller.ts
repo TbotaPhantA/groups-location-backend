@@ -29,6 +29,6 @@ export class UsersController {
         type: getUserOutput,
     })
     getUser(@Param() params: {id: string}) {
-        return this.usersService.getUser(parseInt(params.id));
+        return this.usersService.getUser(params.id);
     }
 }

@@ -3,6 +3,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule } from "@nestjs/config";
 import { UsersModule } from './users/users.module';
 import { User } from "./users/users.entity";
+import { GroupsModule } from './groups/groups.module';
 
 
 @Module({
@@ -20,7 +21,8 @@ import { User } from "./users/users.entity";
             entities: [User],
             synchronize: true,
         }),
-        UsersModule
+        UsersModule,
+        GroupsModule
     ]
 })
 export class AppModule {}

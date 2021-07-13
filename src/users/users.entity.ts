@@ -1,13 +1,14 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { v4 as uuidv4 } from 'uuid';
 
 
 
 @Entity()
 export class User {
 
-    @PrimaryGeneratedColumn()
-    id: number;
+    @PrimaryColumn('uuid')
+    id: string;
 
     @Column({type: 'varchar', nullable: false, length: 60, })
     name: string;
@@ -20,5 +21,10 @@ export class User {
 
     @Column({type: 'varchar', nullable: false, length: 400})
     password: string;
+
+    @BeforeInsert()
+    addId() {
+        this.id = uuidv4() 
+    }
 
 }
