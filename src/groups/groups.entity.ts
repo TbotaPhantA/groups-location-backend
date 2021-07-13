@@ -1,4 +1,5 @@
-import { BeforeInsert, Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "src/users/users.entity";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 
 
@@ -11,7 +12,8 @@ export class Group {
     @Column('varchar', {nullable: false, length: 30})
     name: string;
 
+    @ManyToOne(() => User)
     @Column('varchar', {nullable: false})
-    ownerId: string
+    owner: User; // TypeOrm will generate column ownerId automatically, also I'll be able to use object owner immediately without worrying about extraction of owner by id... 
 
 }
