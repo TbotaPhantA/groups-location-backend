@@ -8,10 +8,10 @@ async function start() {
 
     const config = new DocumentBuilder()
         .setTitle('Group Location API')
-        .setDescription('This is API has group and user and we can track all locations of users in every particular group, also we can track marks for an user')
+        .setDescription('This is API has groups and users and we can track all locations of users in every particular group, also we can track marks for an user')
         .setVersion('0.0.1')
-        .addTag('group_location')
-        .build()
+        .addBearerAuth()
+        .build();
 
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('/api/docs', app, document);
