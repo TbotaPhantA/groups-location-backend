@@ -1,6 +1,4 @@
 import { Module } from "@nestjs/common";
-import { AppController } from "./app.controller";
-import { AppService } from "./app.servce";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule } from "@nestjs/config";
 import { UsersModule } from './users/users.module';
@@ -8,8 +6,6 @@ import { User } from "./users/users.entity";
 
 
 @Module({
-    controllers: [AppController],
-    providers: [AppService],
     imports: [
         ConfigModule.forRoot({
             envFilePath: '.env',
