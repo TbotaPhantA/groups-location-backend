@@ -1,16 +1,17 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { getUserOutput } from './dto/get-user-output.dto';
 
 @ApiBearerAuth()
-@ApiTags('/users')
+@ApiTags('Users')
 @Controller('/users')
 export class UsersController {
 
     constructor(private usersService: UsersService) {}
 
     @Get()
+    @ApiOperation({summary: "Getting all the users"})
     @ApiResponse({
         status: 200, 
         description: 'All found users',
@@ -21,6 +22,7 @@ export class UsersController {
     }
 
     @Get(':id')
+    @ApiOperation({summary: "Getting one user by his ID"})
     @ApiResponse({
         status: 200, 
         description: 'find user',
