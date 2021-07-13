@@ -4,6 +4,7 @@ import { ConfigModule } from "@nestjs/config";
 import { UsersModule } from './users/users.module';
 import { User } from "./users/users.entity";
 import { GroupsModule } from './groups/groups.module';
+import { Group } from "./groups/groups.entity";
 
 
 @Module({
@@ -18,7 +19,7 @@ import { GroupsModule } from './groups/groups.module';
             username: process.env.POSTGRES_USER,
             password: process.env.POSTGRES_PASSWORD,
             database: process.env.POSTGRES_DB, 
-            entities: [User],
+            entities: [User, Group],
             synchronize: true,
         }),
         UsersModule,
