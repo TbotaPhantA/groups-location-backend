@@ -5,14 +5,4 @@ import { AppService } from "./app.servce";
 
 
 @Controller('/api')
-export class AppController {
-
-    constructor(private appService: AppService) {}
-
-    @Get('/users')
-    getUsers() {
-        this.appService.getUsers()
-        // return  [{id: 1, name: 'Tapor'}];
-    }
-
-}
+export class AppController { }

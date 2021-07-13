@@ -3,6 +3,7 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.servce";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule } from "@nestjs/config";
+import { UsersModule } from './users/users.module';
 
 
 @Module({
@@ -21,7 +22,8 @@ import { ConfigModule } from "@nestjs/config";
             database: process.env.POSTGRES_DB, 
             entities: [],
             synchronize: true,
-        })
+        }),
+        UsersModule
     ]
 })
 export class AppModule {}
