@@ -11,12 +11,12 @@ export class UsersService {
         return users
     }
 
-    async getUser(user_uuid: string) {
+    async getUser(userUuid: string) {
         const users = [
             {id: '1', name: 'tapor', email: 'tapor@mail.com'},
             {id: '2', name: 'zabor', email: 'zabor@mail.com'},
         ];
-        return users.filter(user => user.id === user_uuid)
+        return users.filter(user => user.id === userUuid)
     }
 
 
