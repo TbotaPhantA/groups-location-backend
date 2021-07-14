@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { GroupsService } from './groups.service';
 import { GetGroupOutput } from './dto/get-group-output.dto';
@@ -28,7 +28,7 @@ export class GroupsController {
         description: 'find user',
         type: GetGroupOutput,
     })
-    getUser(@Param() params: {id: string}) {
-        return this.groupsService.getGroup(params.id);
+    getUser(@Param('uuid', new ParseUUIDPipe()) uuid: string) {
+        return this.groupsService.getGroup(uuid);
     }
 }

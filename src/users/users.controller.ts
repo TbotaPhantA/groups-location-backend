@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { getUserOutput } from './dto/get-user-output.dto';
@@ -28,7 +28,7 @@ export class UsersController {
         description: 'find user',
         type: getUserOutput,
     })
-    getUser(@Param() params: {id: string}) {
-        return this.usersService.getUser(params.id);
+    getUser(@Param('uuid', new ParseUUIDPipe()) uuid: string) {
+        return this.usersService.getUser(uuid);
     }
 }
