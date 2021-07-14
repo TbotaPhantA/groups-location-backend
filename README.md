@@ -8,5 +8,5 @@ The essence is simple. Every user  can create a groups and invite there his frie
 ## **TypeOrm and Postgresql**
 
 ### Entity Relationship Diagram
-![ERD](/readme-images/2021-07-14_21-35.png)
+![ERD](/readme-images/WholeERD.png)
 
