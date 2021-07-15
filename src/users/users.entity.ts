@@ -8,7 +8,7 @@ import {Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 export class User {
 
     @PrimaryGeneratedColumn('uuid')
-    id: string;
+    uuid: string;
 
     @Column({type: 'varchar', nullable: false, length: 60, })
     name: string;

@@ -8,7 +8,7 @@ import { UsersGroups } from "./users_groups.entity";
 export class Group {
 
     @PrimaryGeneratedColumn('uuid')
-    id: string;
+    uuid: string;
 
     @Column('varchar', {nullable: false, length: 30})
     name: string;

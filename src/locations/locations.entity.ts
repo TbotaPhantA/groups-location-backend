@@ -5,7 +5,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 export class Location {
 
     @PrimaryGeneratedColumn('uuid')
-    id: string;
+    uuid: string;
 
     @Column('point')
     coordinates!: Point;

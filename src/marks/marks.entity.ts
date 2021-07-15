@@ -6,7 +6,7 @@ import { UsersGroups } from "src/groups/users_groups.entity";
 export class Mark {
     
     @PrimaryGeneratedColumn('uuid')
-    id: string;
+    uuid: string;
 
     @Column('point')
     coordinates!: Point;

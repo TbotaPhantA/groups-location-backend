@@ -9,7 +9,7 @@ import { Mark } from "src/marks/marks.entity";
 export class UsersGroups {
 
     @PrimaryGeneratedColumn('uuid')
-    id: string;
+    uuid: string;
 
     @ManyToOne(() => User, user => user.usersGroups) 
     user!: User;    
