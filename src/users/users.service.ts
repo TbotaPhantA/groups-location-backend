@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UsePipes, ValidationPipe } from '@nestjs/common';
+import { CreateUserInputDto } from './dto/create-user-input.dto';
 
 @Injectable()
 export class UsersService {
@@ -17,6 +18,13 @@ export class UsersService {
             {id: '2', name: 'zabor', email: 'zabor@mail.com'},
         ];
         return users.filter(user => user.id === userUuid)
+    }
+
+    async createUser(dto: CreateUserInputDto) {
+        return {
+            name: 'rashid',
+            email: 'rashid@gmail.com',
+        }
     }
 
 
