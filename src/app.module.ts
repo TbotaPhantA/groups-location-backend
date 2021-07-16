@@ -10,6 +10,7 @@ import { LocationsModule } from './locations/locations.module';
 import { Location } from './locations/locations.entity';
 import { MarksModule } from './marks/marks.module';
 import { Mark } from "./marks/marks.entity";
+import { NativeAuthModule } from './native-auth/native-auth.module';
 
 
 @Module({
@@ -31,6 +32,7 @@ import { Mark } from "./marks/marks.entity";
         GroupsModule,
         LocationsModule,
         MarksModule,
+        NativeAuthModule,
     ]
 })
 export class AppModule {}
