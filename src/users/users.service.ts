@@ -17,7 +17,7 @@ export class UsersService {
             {id: '1', name: 'tapor', email: 'tapor@mail.com'},
             {id: '2', name: 'zabor', email: 'zabor@mail.com'},
         ];
-        return users.filter(user => user.id === userUuid)
+        return users.find(user => user.id === userUuid)
     }
 
     async createUser(dto: CreateUserInputDto) {
