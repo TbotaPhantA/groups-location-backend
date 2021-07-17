@@ -26,6 +26,15 @@ export class UsersService {
         }
     }
 
+    async getUserByEmail(email: string) {
+        try {
+            const user = this.userRepository.findOne({ email: email })
+            return user;
+        } catch (e) {
+            throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+        }
+    }
+
     async createUser(dto: CreateUserInputDto): Promise<GetUserOutputDto>{
         // server won't crash if this Exception will be thrown, client will receive correct error message as reponse, because they throw HttpException()
         await this.assertCreateUserDtoDataIsCorrect(dto); 
