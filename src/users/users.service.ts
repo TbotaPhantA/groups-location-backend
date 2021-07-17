@@ -18,9 +18,12 @@ export class UsersService {
     }
 
     async getUserByUUID(userUuid: string): Promise<GetUserOutputDto> {
-        const user = await this.userRepository.findOne(userUuid, {select: ['uuid', 'name', 'email']})
-        if (!user) throw new HttpException(`There is no user with UUID = ${userUuid}`, HttpStatus.NOT_FOUND);
-        return user
+        try {
+            const user = await this.userRepository.findOne(userUuid, {select: ['uuid', 'name', 'email']})
+            return user
+        } catch (e) {
+            throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+        }
     }
 
     async createUser(dto: CreateUserInputDto): Promise<GetUserOutputDto>{
