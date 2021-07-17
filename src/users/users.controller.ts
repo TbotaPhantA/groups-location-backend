@@ -3,7 +3,6 @@ import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagg
 import { UsersService } from './users.service';
 import { GetUserOutputDto } from './dto/get-user-output.dto';
 import { CreateUserInputDto } from './dto/create-user-input.dto';
-import { Observable } from 'rxjs';
 
 @ApiBearerAuth()
 @ApiTags('Users')
