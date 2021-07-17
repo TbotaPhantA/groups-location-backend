@@ -1,9 +1,9 @@
 import { Body, Controller, Get, HttpStatus, Param, ParseUUIDPipe, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
-import { getUserOutput } from './dto/get-user-output.dto';
+import { GetUserOutputDto } from './dto/get-user-output.dto';
 import { CreateUserInputDto } from './dto/create-user-input.dto';
-import { CreateUserOutputDto } from './dto/create-user-output.dto';
+import { Observable } from 'rxjs';
 
 @ApiBearerAuth()
 @ApiTags('Users')
@@ -17,21 +17,21 @@ export class UsersController {
     @ApiResponse({
         status: 200, 
         description: 'All found users',
-        type: [getUserOutput],
+        type: [GetUserOutputDto],
     })
-    getUsers() {
-        return this.usersService.getUsers();
+    getUsers(): Promise<GetUserOutputDto[]> {
+        return this.usersService.getAllUsers();
     }
 
-    @Get(':id')
+    @Get(':uuid')
     @ApiOperation({summary: "Getting one user by his ID"})
     @ApiResponse({
         status: 200, 
         description: 'find user',
-        type: getUserOutput,
+        type: GetUserOutputDto,
     })
-    getUser(@Param('uuid', new ParseUUIDPipe()) uuid: string) {
-        return this.usersService.getUser(uuid);
+    getUser(@Param('uuid') uuid: string): Promise<GetUserOutputDto> {
+        return this.usersService.getUserByUUID(uuid);
     }
 
     @Post('/create')
@@ -39,10 +39,9 @@ export class UsersController {
     @ApiResponse({
         status: HttpStatus.CREATED,
         description: "Validation and creation of new user in the DB",
-        type: CreateUserOutputDto,
+        type: GetUserOutputDto,
     })
-    @UsePipes(new ValidationPipe())
-    createUser(@Body() dto: CreateUserInputDto) {
+    createUser(@Body() dto: CreateUserInputDto): Promise<GetUserOutputDto> {
         return this.usersService.createUser(dto);
     }
 }

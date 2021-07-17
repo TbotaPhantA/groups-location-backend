@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsString, IsEmail, IsNotEmpty, Length, MinLength, MaxLength } from "class-validator";
+import { nanoid } from "nanoid";
 
 
 export class CreateUserInputDto {
@@ -21,5 +22,11 @@ export class CreateUserInputDto {
     @IsString({ message: 'password should be a string type' })
     @IsNotEmpty({ message: 'Password is empty'})
     readonly password: string;
+
+    constructor(name: string, email: string, password: string) {
+        this.name = name
+        this.email = email
+        this.password = password
+    }
 
 }

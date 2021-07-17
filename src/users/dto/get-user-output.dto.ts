@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger"
 
 
-export class getUserOutput {
+export class GetUserOutputDto {
     @ApiProperty({ example: 'sdlfkjsldfk2234234', description: 'identificator of user' })
     readonly uuid: string;
 
