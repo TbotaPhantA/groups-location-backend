@@ -1,6 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsString, IsEmail, IsNotEmpty, Length, MinLength, MaxLength } from "class-validator";
-import { nanoid } from "nanoid";
 
 
 export class CreateUserInputDto {
