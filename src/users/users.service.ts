@@ -16,16 +16,16 @@ export class UsersService {
         return await this.userRepository.find();
     }
 
-    async getUserByUUID(userUuid: string): Promise<User> {
+    async getUserByUUID(userUuid: string): Promise<User | undefined> {
         try {
-            const user = await this.userRepository.findOne(userUuid, {select: ['uuid', 'name', 'email']})
+            const user = await this.userRepository.findOne(userUuid)
             return user
         } catch (e) {
             throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
         }
     }
 
-    async getUserByEmail(email: string): Promise<User> {
+    async getUserByEmail(email: string): Promise<User | undefined> {
         const user = this.userRepository.findOne({ email: email })
         return user;
     }
