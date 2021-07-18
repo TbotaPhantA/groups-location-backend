@@ -15,7 +15,7 @@ export class NativeAuthController {
     @ApiOperation({ summary: "signup user with his email, name and password" })
     @ApiResponse({
         status: HttpStatus.CREATED,
-        description: "if reigstration is successful reponds with public information of created user",
+        description: "if reigstration is successful reponds with token with public information of created user",
         type: TokensOutputDto,
     })
     @UsePipes(new ValidationPipe())
@@ -27,7 +27,7 @@ export class NativeAuthController {
     @ApiOperation({ summary: "signin user with email and password" })
     @ApiResponse({
         status: HttpStatus.CREATED,
-        description: "if signing in is succeffsul, responds with public information of this user",
+        description: "if signing in is succeffsul, responds with token with public information of this user",
         type: TokensOutputDto,
     })
     @UsePipes(new ValidationPipe())
