@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { validate, validateOrReject } from 'class-validator';
 import { Repository } from 'typeorm';
 import { CreateUserInputDto } from './dto/create-user-input.dto';
-import { GetUserOutputDto } from './dto/get-user-output.dto';
 import { User } from './users.entity';
 
 @Injectable()
@@ -13,11 +12,11 @@ export class UsersService {
         @InjectRepository(User) private readonly userRepository: Repository<User>
     ) { }
 
-    async getAllUsers(): Promise<GetUserOutputDto[]> {
-        return await this.userRepository.find({select: ['uuid', 'name', 'email']});
+    async getAllUsers(): Promise<User[]> {
+        return await this.userRepository.find();
     }
 
-    async getUserByUUID(userUuid: string): Promise<GetUserOutputDto> {
+    async getUserByUUID(userUuid: string): Promise<User> {
         try {
             const user = await this.userRepository.findOne(userUuid, {select: ['uuid', 'name', 'email']})
             return user
@@ -26,21 +25,16 @@ export class UsersService {
         }
     }
 
-    async getUserByEmail(email: string) {
-        try {
-            const user = this.userRepository.findOne({ email: email })
-            return user;
-        } catch (e) {
-            throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
-        }
+    async getUserByEmail(email: string): Promise<User> {
+        const user = this.userRepository.findOne({ email: email })
+        return user;
     }
 
-    async createUser(dto: CreateUserInputDto): Promise<GetUserOutputDto>{
+    async createUser(dto: CreateUserInputDto): Promise<User>{
         // server won't crash if this Exception will be thrown, client will receive correct error message as reponse, because they throw HttpException()
         await this.assertCreateUserDtoDataIsCorrect(dto); 
         await this.assertUserInDtoHasUniqueEmail(dto);
-        const {password, ...user} = await this.userRepository.save(dto);
-        return user
+        return await this.userRepository.save(dto);
     }
 
     private async assertCreateUserDtoDataIsCorrect(dto: CreateUserInputDto): Promise<void> {
