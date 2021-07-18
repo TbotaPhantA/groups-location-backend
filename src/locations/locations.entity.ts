@@ -8,6 +8,6 @@ export class Location {
     uuid: string;
 
     @Column('point')
-    coordinates!: Point;
+    coordinates: Point;
 
 }
