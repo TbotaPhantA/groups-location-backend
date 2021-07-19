@@ -37,6 +37,12 @@ export class UsersService {
         return await this.userRepository.save(dto);
     }
 
+    async updateRefreshToken(uuid: string, newRefreshToken: string): Promise<string> {
+        const newToken = await this.userRepository.update(uuid, {refresh_token: newRefreshToken}) 
+        console.log(newToken);
+        return newRefreshToken;
+    }
+
     private async assertCreateUserDtoDataIsCorrect(dto: CreateUserInputDto): Promise<void> {
         try {
             const dtoInstance = new CreateUserInputDto(dto.name, dto.email, dto.password); // we need instance for class-validator to work
