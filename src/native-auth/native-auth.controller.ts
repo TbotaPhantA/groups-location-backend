@@ -1,6 +1,6 @@
-import { Body, Controller, HttpStatus, Post, Res, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Post, Put, Req, Res, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { CreateUserInputDto } from 'src/users/dto/create-user-input.dto';
 import { NAuthSignInInputDto } from './dto/NAuth-signin-input.dto';
 import { TokensOutputDto } from './dto/Tokens-output.dto';
@@ -34,6 +34,11 @@ export class NativeAuthController {
     @UsePipes(new ValidationPipe())
     signIn(@Body() dto: NAuthSignInInputDto, @Res({ passthrough: true }) response: Response ): Promise<TokensOutputDto> {
         return this.nativeAuthService.signIn(dto, response);
+    }
+
+    @Put('update-tokens')
+    updateAccessAndRefreshTokens(@Req() request: Request, @Res({ passthrough: true }) response: Response): Promise<TokensOutputDto> {
+        return this.nativeAuthService.updateAccessAndRefreshTokens(request, response);
     }
 
 }
