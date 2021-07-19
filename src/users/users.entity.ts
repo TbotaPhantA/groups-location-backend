@@ -19,8 +19,11 @@ export class User {
     @Column({type: 'varchar', nullable: false, length: 500})
     password: string;
 
+    @Column({type: 'varchar', length: 1000})
+    refresh_token: string;
+
     @OneToMany(() => Group, group => group.owner)
-    ownedGroups!: Group[]
+    ownedGroups!: Group[];
 
     @OneToMany(() => UsersGroups, usersGropus => usersGropus.user)
     usersGroups!: UsersGroups[];
