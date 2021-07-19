@@ -37,8 +37,8 @@ export class UsersService {
         return await this.userRepository.save(dto);
     }
 
-    async updateRefreshToken(uuid: string, newRefreshToken: string): Promise<string> {
-        const newToken = await this.userRepository.update(uuid, {refresh_token: newRefreshToken}) 
+    async updateRefreshToken(uuidOfUser: string, newRefreshToken: string): Promise<string> {
+        const newToken = await this.userRepository.update(uuidOfUser, {refresh_token: newRefreshToken}) 
         console.log(newToken);
         return newRefreshToken;
     }
