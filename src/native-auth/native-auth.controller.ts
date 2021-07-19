@@ -20,8 +20,8 @@ export class NativeAuthController {
         type: TokensOutputDto,
     })
     @UsePipes(new ValidationPipe())
-    async signUp(@Body() dto: CreateUserInputDto, @Res({ passthrough: true }) response: Response ): Promise<TokensOutputDto> {
-        return await this.nativeAuthService.signUp(dto, response);
+    signUp(@Body() dto: CreateUserInputDto, @Res({ passthrough: true }) response: Response ): Promise<TokensOutputDto> {
+        return this.nativeAuthService.signUp(dto, response);
     }
 
     @Post('signin')
@@ -32,8 +32,8 @@ export class NativeAuthController {
         type: TokensOutputDto,
     })
     @UsePipes(new ValidationPipe())
-    async signIn(@Body() dto: NAuthSignInInputDto, @Res({ passthrough: true }) response: Response ): Promise<TokensOutputDto> {
-        return await this.nativeAuthService.signIn(dto, response);
+    signIn(@Body() dto: NAuthSignInInputDto, @Res({ passthrough: true }) response: Response ): Promise<TokensOutputDto> {
+        return this.nativeAuthService.signIn(dto, response);
     }
 
 }
