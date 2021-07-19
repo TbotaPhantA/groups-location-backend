@@ -37,10 +37,8 @@ export class UsersService {
         return await this.userRepository.save(dto);
     }
 
-    async updateRefreshToken(uuidOfUser: string, newRefreshToken: string): Promise<string> {
-        const newToken = await this.userRepository.update(uuidOfUser, {refresh_token: newRefreshToken}) 
-        console.log(newToken);
-        return newRefreshToken;
+    async updateRefreshToken(uuidOfUser: string, newRefreshToken: string): Promise<void> {
+        await this.userRepository.update(uuidOfUser, {refresh_token: newRefreshToken});
     }
 
     private async assertCreateUserDtoDataIsCorrect(dto: CreateUserInputDto): Promise<void> {
