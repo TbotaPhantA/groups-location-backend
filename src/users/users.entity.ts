@@ -1,6 +1,7 @@
 import { Group } from "src/groups/groups.entity";
 import { UsersGroups } from "src/groups/users_groups.entity";
-import {Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { RefreshToken } from "src/native-auth/refresh_tokens.entity";
+import {Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 
 
@@ -19,8 +20,8 @@ export class User {
     @Column({type: 'varchar', nullable: false, length: 500})
     password: string;
 
-    @Column({type: 'varchar', nullable: true, length: 1000})
-    refresh_token: string;
+    @OneToOne(() => RefreshToken, refreshToken => refreshToken.user)
+    refreshToken: RefreshToken;
 
     @OneToMany(() => Group, group => group.owner)
     ownedGroups!: Group[];
