@@ -19,7 +19,7 @@ export class User {
     @Column({type: 'varchar', nullable: false, length: 500})
     password: string;
 
-    @Column({type: 'varchar', length: 1000})
+    @Column({type: 'varchar', nullable: true, length: 1000})
     refresh_token: string;
 
     @OneToMany(() => Group, group => group.owner)
