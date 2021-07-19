@@ -1,10 +1,14 @@
 import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import { appendFile } from "fs";
 import { AppModule } from "./app.module";
+import * as cookieparser  from 'cookie-parser';
 
 async function start() {
     const PORT = process.env.PORT || 5000;
     const app = await NestFactory.create(AppModule);
+
+    app.use(cookieparser());
 
     const config = new DocumentBuilder()
         .setTitle('Group Location API')
