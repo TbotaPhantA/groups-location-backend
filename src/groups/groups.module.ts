@@ -3,16 +3,17 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/users/users.entity';
 import { GroupsController } from './groups.controller';
 import { Group } from './groups.entity';
-import { GroupsService } from './groups.service';
 import { UsersGroups } from './users_groups.entity';
 import { Location } from '../locations/locations.entity';
-import { JwtGuard } from 'src/native-auth/jwt-auth.guard';
-import { JwtModule } from '@nestjs/jwt';
 import { NativeAuthModule } from 'src/native-auth/native-auth.module';
+import { GroupsCreateService } from './services/groups-create.service';
+import { GroupsUpdateService } from './services/groups-update.service';
+import { GroupsReadService } from './services/groups-read.service';
+import { GroupsDeleteService } from './services/groups-delete.service';
 
 @Module({
   controllers: [GroupsController],
-  providers: [GroupsService],
+  providers: [GroupsCreateService, GroupsUpdateService, GroupsReadService, GroupsDeleteService],
   imports: [
     TypeOrmModule.forFeature([Group, User, UsersGroups, Location]),
     NativeAuthModule
