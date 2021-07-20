@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from 'src/users/users.module';
+import { JwtGuard } from './jwt-auth.guard';
 import { NativeAuthController } from './native-auth.controller';
 import { NativeAuthService } from './native-auth.service';
 import { RefreshToken } from './refresh_tokens.entity';
@@ -19,5 +20,9 @@ import { RefreshToken } from './refresh_tokens.entity';
       }
     }),
   ],
+  exports: [
+    NativeAuthService,
+    JwtModule
+  ]
 })
 export class NativeAuthModule {}
