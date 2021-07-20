@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, Param, ParseUUIDPipe, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Param, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtGuard } from 'src/native-auth/jwt-auth.guard';
 import { GetAuthenticatedUser } from 'src/native-auth/get-user.decorator';
@@ -29,6 +29,7 @@ export class GroupsController {
     })
     @Post('create')
     @UseGuards(JwtGuard)
+    @UsePipes(ValidationPipe)
     createGroup(@GetAuthenticatedUser() user: User, @Body() dto: CreateGroupInputDto) {
         return this.groupsCreateService.createGroup(user, dto);
     }
