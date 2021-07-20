@@ -17,6 +17,6 @@ export class Group {
     owner!: User; // TypeOrm will generate column ownerId automatically, also I'll be able to use object owner immediately without worrying about extraction of owner by id... 
 
     @OneToMany(() => UsersGroups, usersGroups => usersGroups.group)
-    usersGroups!: UsersGroups[]; 
+    usersGroups: UsersGroups[] = []; 
 
 }
