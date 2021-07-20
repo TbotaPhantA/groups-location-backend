@@ -12,14 +12,21 @@ export class GroupsReadService {
                 @InjectRepository(UsersGroups) private readonly userGroupRepo: Repository<UsersGroups>) {} 
 
     async getAllGroups() {
-        return await this.groupRepository.find({relations: ['owner', 'usersGroups']});
+        const allGroups = await this.groupRepository.find({relations: ['owner', 'usersGroups'] })
+        return allGroups.map(group => this.clearGroupFromOwnerPassword(group));
     }
 
     async getOneGroupByUUID(uuid: string) {
         try {
-            return await this.groupRepository.findOne(uuid, {relations: ['owner', 'usersGroups']});  
+            const group = await this.groupRepository.findOne(uuid, {relations: ['owner', 'usersGroups']});  
+            return this.clearGroupFromOwnerPassword(group);
         } catch (e) {
             throw new HttpException(e.message, HttpStatus.BAD_REQUEST)
         }
+    }
+
+    private clearGroupFromOwnerPassword(group: Group): Group {
+        delete group.owner.password;
+        return group;
     }
 }
