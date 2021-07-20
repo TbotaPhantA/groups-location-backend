@@ -20,6 +20,7 @@ export class GroupsController {
                 private groupsUpdateService: GroupsUpdateService,
                 private groupsDeleteService: GroupsDeleteService) {}
 
+    @ApiBearerAuth()
     @ApiOperation({ summary: "Create Group: *authentication required*" })
     @ApiResponse({
         status: HttpStatus.CREATED,

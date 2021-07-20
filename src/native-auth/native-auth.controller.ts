@@ -1,5 +1,5 @@
 import { Body, Controller, Get, HttpStatus, Post, Put, Req, Res, UsePipes, ValidationPipe } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { CreateUserInputDto } from 'src/users/dto/create-user-input.dto';
 import { NAuthSignInInputDto } from './dto/NAuth-signin-input.dto';
@@ -36,6 +36,7 @@ export class NativeAuthController {
         return this.nativeAuthService.signIn(dto, response);
     }
 
+    @ApiBearerAuth()
     @Put('update-tokens')
     updateAccessAndRefreshTokens(@Req() request: Request, @Res({ passthrough: true }) response: Response): Promise<TokensOutputDto> {
         return this.nativeAuthService.updateAccessAndRefreshTokens(request, response);
