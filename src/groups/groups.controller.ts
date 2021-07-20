@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, Param, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtGuard } from 'src/native-auth/jwt-auth.guard';
 import { GetAuthenticatedUser } from 'src/native-auth/get-user.decorator';
@@ -9,6 +9,8 @@ import { GroupsReadService } from './services/groups-read.service';
 import { GroupsUpdateService } from './services/groups-update.service';
 import { GroupsDeleteService } from './services/groups-delete.service';
 import { Group } from './groups.entity';
+import { UpdateGroupNameInputDto } from './dto/update-group-name-input.dto';
+import { GroupOwnerGuard } from './guards/group-owner.guard';
 
 
 @ApiTags('Groups')
@@ -30,7 +32,7 @@ export class GroupsController {
     @Post('create')
     @UseGuards(JwtGuard)
     @UsePipes(ValidationPipe)
-    createGroup(@GetAuthenticatedUser() user: User, @Body() dto: CreateGroupInputDto) {
+    createGroup(@GetAuthenticatedUser() user: User, @Body() dto: CreateGroupInputDto): Promise<Group> {
         return this.groupsCreateService.createGroup(user, dto);
     }
 
@@ -41,7 +43,7 @@ export class GroupsController {
         type: [Group],
     })
     @Get()
-    getAllGroups() {
+    getAllGroups(): Promise<Group[]> {
         return this.groupsReadService.getAllGroups();
     }
 
@@ -52,7 +54,19 @@ export class GroupsController {
         type: Group,
     })
     @Get(':uuid')
-    getOneGroupByUUID(@Param('uuid') uuid: string) {
+    getOneGroupByUUID(@Param('uuid') uuid: string): Promise<Group> {
         return this.groupsReadService.getOneGroupByUUID(uuid);
+    }
+
+    @Put(':uuid/change-name')
+    @ApiOperation({ summary: "Updates the name of the Group" })
+    @ApiResponse({
+        status: HttpStatus.NO_CONTENT,
+        description: "If group name was updated successfully, 204 status code with be returned, with no any content",
+    })
+    @UsePipes(ValidationPipe)
+    @UseGuards(JwtGuard, GroupOwnerGuard)
+    async updateGroupName(@Param('uuid') uuid: string, @Body() dto: UpdateGroupNameInputDto): Promise<void> {
+        await this.groupsUpdateService.updateGroupName(uuid, dto)
     }
 }
