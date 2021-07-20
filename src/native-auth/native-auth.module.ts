@@ -1,13 +1,16 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from 'src/users/users.module';
 import { NativeAuthController } from './native-auth.controller';
 import { NativeAuthService } from './native-auth.service';
+import { RefreshToken } from './refresh_tokens.entity';
 
 @Module({
   controllers: [NativeAuthController],
   providers: [NativeAuthService],
   imports: [
+    TypeOrmModule.forFeature([RefreshToken]),
     UsersModule,
     JwtModule.register({
       secret: process.env.SECRET_KEY || 'zabor', 
@@ -15,6 +18,6 @@ import { NativeAuthService } from './native-auth.service';
         expiresIn: '5m'
       }
     }),
-  ]
+  ],
 })
 export class NativeAuthModule {}

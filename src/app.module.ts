@@ -11,6 +11,7 @@ import { Location } from './locations/locations.entity';
 import { MarksModule } from './marks/marks.module';
 import { Mark } from "./marks/marks.entity";
 import { NativeAuthModule } from './native-auth/native-auth.module';
+import { RefreshToken } from "./native-auth/refresh_tokens.entity";
 
 
 @Module({
@@ -25,7 +26,7 @@ import { NativeAuthModule } from './native-auth/native-auth.module';
             username: process.env.POSTGRES_USER,
             password: process.env.POSTGRES_PASSWORD,
             database: process.env.POSTGRES_DB, 
-            entities: [User, Group, UsersGroups, Location, Mark],
+            entities: [User, Group, UsersGroups, Location, Mark, RefreshToken],
             synchronize: true,
         }),
         UsersModule,
