@@ -22,6 +22,6 @@ export class UsersGroups {
     location: Location;
 
     @OneToMany(() => Mark, mark => mark.userGroup)
-    marks: Mark[] = [];
+    marks: Mark[];
 
 }
