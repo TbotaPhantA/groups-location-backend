@@ -37,6 +37,12 @@ export class NativeAuthController {
     }
 
     @ApiBearerAuth()
+    @ApiOperation({ summary: "updates refresh_token in httponly cookie, and returns fresh access_token" })
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: "if update of the tokens is successful responds with fresh access_token",
+        type: TokensOutputDto,
+    })
     @Put('update-tokens')
     updateAccessAndRefreshTokens(@Req() request: Request, @Res({ passthrough: true }) response: Response): Promise<TokensOutputDto> {
         return this.nativeAuthService.updateAccessAndRefreshTokens(request, response);
