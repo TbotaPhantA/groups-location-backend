@@ -19,9 +19,9 @@ export class UsersGroups {
 
     @OneToOne(() => Location)
     @JoinColumn()
-    location!: Location;
+    location: Location;
 
     @OneToMany(() => Mark, mark => mark.userGroup)
-    marks!: Mark[];
+    marks: Mark[] = [];
 
 }
