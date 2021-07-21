@@ -77,7 +77,7 @@ export class GroupsController {
     @Delete(':uuid')
     @ApiOperation({ summary: "Deletes the Group by its uuid" })
     @ApiResponse({
-        status: HttpStatus.NO_CONTENT,
+        status: HttpStatus.OK,
         description: "If group name was updated successfully, 204 status code with be returned, with no any content",
     })
     @ApiBearerAuth()
@@ -85,5 +85,18 @@ export class GroupsController {
     @UseGuards(JwtGuard,  GroupGuard)
     async deleteGroup(@GetGroup() group: Group): Promise<Group> {
         return this.groupsDeleteService.deleteGroup(group);
+    }
+
+    @Post('/:uuid/create-invite')
+    @ApiOperation({ summary: "Creates a disposable invite link" })
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: "If currenter user is the member of the group creates disposalbe invitation link",
+    })
+    @ApiBearerAuth()
+    @GroupRole('member')
+    @UseGuards(JwtGuard, GroupGuard)
+    createInviteLink(@Param('uuid') uuid: string) {
+        this.groupsCreateService.createInviteLink();
     }
 }
