@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtGuard } from 'src/native-auth/jwt-auth.guard';
 import { GetAuthenticatedUser } from 'src/native-auth/get-user.decorator';
@@ -11,6 +11,7 @@ import { GroupsDeleteService } from './services/groups-delete.service';
 import { Group } from './groups.entity';
 import { UpdateGroupNameInputDto } from './dto/update-group-name-input.dto';
 import { GroupOwnerGuard } from './guards/group-owner.guard';
+import { GetGroup } from 'src/native-auth/get-group.decorator';
 
 
 @ApiTags('Groups')
@@ -68,5 +69,16 @@ export class GroupsController {
     @UseGuards(JwtGuard, GroupOwnerGuard)
     async updateGroupName(@Param('uuid') uuid: string, @Body() dto: UpdateGroupNameInputDto): Promise<void> {
         await this.groupsUpdateService.updateGroupName(uuid, dto)
+    }
+
+    @Delete(':uuid')
+    @ApiOperation({ summary: "Deletes the Group by its uuid" })
+    @ApiResponse({
+        status: HttpStatus.NO_CONTENT,
+        description: "If group name was updated successfully, 204 status code with be returned, with no any content",
+    })
+    @UseGuards(JwtGuard,  GroupOwnerGuard)
+    async deleteGroup(@GetGroup() group: Group): Promise<Group> {
+        return this.groupsDeleteService.deleteGroup(group);
     }
 }

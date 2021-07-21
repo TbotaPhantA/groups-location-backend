@@ -11,4 +11,9 @@ export class GroupsDeleteService {
     constructor(@InjectRepository(Group) private readonly groupRepository: Repository<Group>,
                 @InjectRepository(UsersGroups) private readonly userGroupRepo: Repository<UsersGroups>) {} 
 
+
+    async deleteGroup(group: Group): Promise<Group> {
+        return this.groupRepository.remove(group);
+    } 
+
 }
