@@ -11,10 +11,10 @@ export class UsersGroups {
     @PrimaryGeneratedColumn('uuid')
     uuid: string;
 
-    @ManyToOne(() => User, user => user.usersGroups) 
+    @ManyToOne(() => User, user => user.usersGroups, {onDelete: 'CASCADE'}) 
     user!: User;    
 
-    @ManyToOne(() => Group, group => group.usersGroups) 
+    @ManyToOne(() => Group, group => group.usersGroups, {onDelete: 'CASCADE'}) 
     group!: Group;
 
     @OneToOne(() => Location)
