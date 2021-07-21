@@ -10,8 +10,9 @@ import { GroupsUpdateService } from './services/groups-update.service';
 import { GroupsDeleteService } from './services/groups-delete.service';
 import { Group } from './groups.entity';
 import { UpdateGroupNameInputDto } from './dto/update-group-name-input.dto';
-import { GroupOwnerGuard } from './guards/group-owner.guard';
+import { GroupGuard } from './guards/group.guard';
 import { GetGroup } from 'src/native-auth/get-group.decorator';
+import { GroupRole } from './group-role.decorator';
 
 
 @ApiTags('Groups')
@@ -67,7 +68,8 @@ export class GroupsController {
     })
     @UsePipes(ValidationPipe)
     @ApiBearerAuth()
-    @UseGuards(JwtGuard, GroupOwnerGuard)
+    @GroupRole('owner')
+    @UseGuards(JwtGuard, GroupGuard)
     async updateGroupName(@Param('uuid') uuid: string, @Body() dto: UpdateGroupNameInputDto): Promise<void> {
         await this.groupsUpdateService.updateGroupName(uuid, dto)
     }
@@ -79,7 +81,8 @@ export class GroupsController {
         description: "If group name was updated successfully, 204 status code with be returned, with no any content",
     })
     @ApiBearerAuth()
-    @UseGuards(JwtGuard,  GroupOwnerGuard)
+    @GroupRole('owner')
+    @UseGuards(JwtGuard,  GroupGuard)
     async deleteGroup(@GetGroup() group: Group): Promise<Group> {
         return this.groupsDeleteService.deleteGroup(group);
     }
