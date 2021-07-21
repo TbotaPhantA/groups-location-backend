@@ -97,6 +97,6 @@ export class GroupsController {
     @GroupRole('member')
     @UseGuards(JwtGuard, GroupGuard)
     createInviteLink(@Param('uuid') uuid: string) {
-        this.groupsCreateService.createInviteLink();
+        this.groupsCreateService.createInviteLink(uuid);
     }
 }
