@@ -2,6 +2,9 @@ import { createParamDecorator, ExecutionContext, HttpException, HttpStatus } fro
 import { User } from "src/users/users.entity";
 
 
+/**
+ * THIS DECORATOR WON'T WORK WITHOUT JWTGUARD!!! 
+ */
 export const GetAuthenticatedUser = createParamDecorator((data, context: ExecutionContext): User => {
     const request = context.switchToHttp().getRequest();
     const user = request.user
