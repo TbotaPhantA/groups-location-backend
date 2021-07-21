@@ -66,6 +66,7 @@ export class GroupsController {
         description: "If group name was updated successfully, 204 status code with be returned, with no any content",
     })
     @UsePipes(ValidationPipe)
+    @ApiBearerAuth()
     @UseGuards(JwtGuard, GroupOwnerGuard)
     async updateGroupName(@Param('uuid') uuid: string, @Body() dto: UpdateGroupNameInputDto): Promise<void> {
         await this.groupsUpdateService.updateGroupName(uuid, dto)
@@ -77,6 +78,7 @@ export class GroupsController {
         status: HttpStatus.NO_CONTENT,
         description: "If group name was updated successfully, 204 status code with be returned, with no any content",
     })
+    @ApiBearerAuth()
     @UseGuards(JwtGuard,  GroupOwnerGuard)
     async deleteGroup(@GetGroup() group: Group): Promise<Group> {
         return this.groupsDeleteService.deleteGroup(group);
