@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { CacheModule, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/users/users.entity';
 import { GroupsController } from './groups.controller';
@@ -10,13 +10,15 @@ import { GroupsCreateService } from './services/groups-create.service';
 import { GroupsUpdateService } from './services/groups-update.service';
 import { GroupsReadService } from './services/groups-read.service';
 import { GroupsDeleteService } from './services/groups-delete.service';
+import { RedisModule } from 'src/redis/redis.module';
 
 @Module({
   controllers: [GroupsController],
   providers: [GroupsCreateService, GroupsUpdateService, GroupsReadService, GroupsDeleteService],
   imports: [
     TypeOrmModule.forFeature([Group, User, UsersGroups, Location]),
-    NativeAuthModule
+    NativeAuthModule,
+    RedisModule,
   ],
 })
 export class GroupsModule {}

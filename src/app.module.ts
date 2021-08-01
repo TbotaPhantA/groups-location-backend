@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { CacheModule, Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule } from "@nestjs/config";
 import { UsersModule } from './users/users.module';
@@ -12,6 +12,8 @@ import { MarksModule } from './marks/marks.module';
 import { Mark } from "./marks/marks.entity";
 import { NativeAuthModule } from './native-auth/native-auth.module';
 import { RefreshToken } from "./native-auth/refresh_tokens.entity";
+import { RedisModule } from "./redis/redis.module";
+
 
 
 @Module({
@@ -29,6 +31,7 @@ import { RefreshToken } from "./native-auth/refresh_tokens.entity";
             entities: [User, Group, UsersGroups, Location, Mark, RefreshToken],
             synchronize: true,
         }),
+        RedisModule,
         UsersModule,
         GroupsModule,
         LocationsModule,

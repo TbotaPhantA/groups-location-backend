@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { CACHE_MANAGER, Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "src/users/users.entity";
 import { Repository } from "typeorm";
@@ -6,12 +6,17 @@ import { CreateGroupInputDto } from "../dto/create-group-input.dto";
 import { Group } from "../groups.entity";
 import { UsersGroups } from "../users_groups.entity";
 import * as random from 'random-string-generator';
+import { REDIS_CLIENT } from "src/redis/redis.module";
+import { Redis } from "ioredis";
+import { RedisService } from "src/redis/redis.service";
+
 
 @Injectable()
 export class GroupsCreateService {
     
     constructor(@InjectRepository(Group) private readonly groupRepository: Repository<Group>,
-                @InjectRepository(UsersGroups) private readonly userGroupRepo: Repository<UsersGroups>) {} 
+                @InjectRepository(UsersGroups) private readonly userGroupRepo: Repository<UsersGroups>,
+                private readonly redisService: RedisService) {} 
 
     
     async createGroup(user: User, dto: CreateGroupInputDto) {
@@ -30,6 +35,8 @@ export class GroupsCreateService {
 
     async createInviteLink(uuidOfGroup: string) {
         const newGeneratedInviteKey: string = random(20);
+        this.redisService.createGroupInvite();
+        // await this.redisCacheManager.set(newGeneratedInviteKey, uuidOfGroup, {ttl: 86400})
         // redis.add(newGeneratedInviteKey: {uuid: uuidOfGroup}) pseudo code
     }
 
@@ -39,4 +46,4 @@ export class GroupsCreateService {
             group: group,
         })
     }
-}
+} 
