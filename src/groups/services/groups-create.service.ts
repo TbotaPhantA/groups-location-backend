@@ -5,10 +5,10 @@ import { Repository } from "typeorm";
 import { CreateGroupInputDto } from "../dto/create-group-input.dto";
 import { Group } from "../groups.entity";
 import { UsersGroups } from "../users_groups.entity";
-import * as random from 'random-string-generator';
 import { REDIS_CLIENT } from "src/redis/redis.module";
 import { Redis } from "ioredis";
 import { RedisService } from "src/redis/redis.service";
+import { CreateInviteLinkOutputDto } from "../dto/create-invite-link-output.dto";
 
 
 @Injectable()
@@ -33,14 +33,18 @@ export class GroupsCreateService {
         return group; 
     }
 
-    async createInviteLink(uuidOfGroup: string) {
-        const newGeneratedInviteKey: string = random(20);
-        this.redisService.createGroupInvite();
-        // await this.redisCacheManager.set(newGeneratedInviteKey, uuidOfGroup, {ttl: 86400})
-        // redis.add(newGeneratedInviteKey: {uuid: uuidOfGroup}) pseudo code
+    async createInviteLink(uuidOfGroup: string): Promise<CreateInviteLinkOutputDto> {
+        const redisNewGroupInviteValue = await this.redisService.createGroupInvite(uuidOfGroup);
+        const protocol = process.env.APPLICATION_PROTOCOL;
+        const host = process.env.APPLICATION_HOST;
+        const port = process.env.APPLICATION_PORT;
+        const inviteLink = `${protocol}://${host}:${port}/groups/useInvite/${redisNewGroupInviteValue.inviteKey}`; 
+        return {
+            inviteLink: inviteLink
+        }
     }
 
-    private async createUserGroup(user: User, group: Group) {
+    public async createUserGroup(user: User, group: Group) {
         return await this.userGroupRepo.save({
             user: user,
             group: group,
