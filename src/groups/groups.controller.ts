@@ -13,6 +13,7 @@ import { UpdateGroupNameInputDto } from './dto/update-group-name-input.dto';
 import { GroupGuard } from './guards/group.guard';
 import { GetGroup } from 'src/native-auth/get-group.decorator';
 import { GroupRole } from './group-role.decorator';
+import { CreateInviteLinkOutputDto } from './dto/create-invite-link-output.dto';
 
 
 @ApiTags('Groups')
@@ -92,11 +93,24 @@ export class GroupsController {
     @ApiResponse({
         status: HttpStatus.OK,
         description: "If currenter user is the member of the group creates disposalbe invitation link",
+        type: CreateInviteLinkOutputDto,
     })
     @ApiBearerAuth()
     @GroupRole('member')
     @UseGuards(JwtGuard, GroupGuard)
-    createInviteLink(@Param('uuid') uuid: string) {
-        this.groupsCreateService.createInviteLink(uuid);
+    createInviteLink(@Param('uuid') uuid: string): Promise<CreateInviteLinkOutputDto> {
+        return this.groupsCreateService.createInviteLink(uuid);
+    }
+
+    @Put('useInvite/:inviteKey')
+    @ApiOperation({ summary: "If inviteKey is valid, adds current user to group members" })
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: "If inviteLink is valid, adds current user to group members",
+    })
+    @ApiBearerAuth()
+    @UseGuards(JwtGuard)
+    useInviteLink(@Param('inviteKey') inviteKey: string, @GetAuthenticatedUser() user: User ): void {
+       this.groupsUpdateService.useInviteLink(inviteKey, user);
     }
 }
