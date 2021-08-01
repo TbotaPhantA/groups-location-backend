@@ -17,7 +17,7 @@ export class RedisService {
         const newInviteValue = await this.cacheManager.set<RedisGroupInviteValue>(`GroupInvite:${newGeneratedInviteKey}`, {
             inviteKey: newGeneratedInviteKey,
             groupUUID: uuidOfGroup,
-        })
+        }, { ttl: 86400 })
         return newInviteValue;
     }
 
