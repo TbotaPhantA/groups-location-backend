@@ -16,7 +16,7 @@ export class GroupsReadService {
         return allGroups.map(group => this.clearGroupFromOwnerPassword(group));
     }
 
-    async getOneGroupByUUID(uuid: string): Promise<Group | undefined> {
+    async getOneGroupByUUID(uuid: string): Promise<Group> {
         try {
             const group = await this.groupRepository.findOne(uuid, {relations: ['owner', 'usersGroups']});  
             return this.clearGroupFromOwnerPassword(group);
