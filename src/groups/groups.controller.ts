@@ -120,11 +120,12 @@ export class GroupsController {
     @ApiResponse({
         status: HttpStatus.OK,
         description: "Kicks the member fo the group",
+        type: User,
     })
     @ApiBearerAuth()
     @GroupRole('owner')
     @UseGuards(JwtGuard, GroupGuard)
-    kickMember(@Param('userUUID') userUUID: string, @GetGroup() group: Group) {
+    kickMember(@Param('userUUID') userUUID: string, @GetGroup() group: Group): Promise<User> {
         return this.groupsDeleteService.kickGroupMember(userUUID, group);
     }
 }
