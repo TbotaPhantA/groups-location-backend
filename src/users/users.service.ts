@@ -16,10 +16,11 @@ export class UsersService {
         return await this.userRepository.find();
     }
 
-    async getUserByUUID(userUuid: string): Promise<User | undefined> {
+    async getUserByUUID(userUuid: string): Promise<User> {
         try {
-            const user = await this.userRepository.findOne(userUuid)
-            return user
+            const user = await this.userRepository.findOne(userUuid, {relations: ['usersGroups']})
+            if (!user) throw new HttpException("there is no user with such uuid", HttpStatus.BAD_REQUEST);
+            return this.clearUserFromPassword(user);
         } catch (e) {
             throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
         }
@@ -49,6 +50,11 @@ export class UsersService {
 
     private async assertUserInDtoHasUniqueEmail(dto: CreateUserInputDto): Promise<void> {
         if (await this.userRepository.findOne({ email: dto.email })) throw new HttpException('User with this email already exists', HttpStatus.BAD_REQUEST)
+    }
+
+    private clearUserFromPassword(user: User): User {
+        delete user.password
+        return user;
     }
     
 
