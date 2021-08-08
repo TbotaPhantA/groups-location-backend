@@ -11,6 +11,7 @@ import { GroupsUpdateService } from './services/groups-update.service';
 import { GroupsReadService } from './services/groups-read.service';
 import { GroupsDeleteService } from './services/groups-delete.service';
 import { RedisModule } from 'src/redis/redis.module';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
   controllers: [GroupsController],
@@ -19,6 +20,7 @@ import { RedisModule } from 'src/redis/redis.module';
     TypeOrmModule.forFeature([Group, User, UsersGroups, Location]),
     NativeAuthModule,
     RedisModule,
+    UsersModule,
   ],
 })
 export class GroupsModule {}
