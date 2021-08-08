@@ -16,7 +16,7 @@ import { RefreshToken } from './refresh_tokens.entity';
     JwtModule.register({
       secret: process.env.SECRET_KEY || 'zabor', 
       signOptions: {
-        expiresIn: '5m'
+        expiresIn: '50m'
       }
     }),
   ],
