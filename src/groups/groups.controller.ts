@@ -114,4 +114,17 @@ export class GroupsController {
     useInviteLink(@Param('inviteKey') inviteKey: string, @GetAuthenticatedUser() user: User): Promise<void> {
        return this.groupsUpdateService.useInviteLink(inviteKey, user);
     }
+
+    @Delete('/kick-member/:userUUID/:groupUUID')
+    @ApiOperation({ summary: "Kicks the member of the group" })
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: "Kicks the member fo the group",
+    })
+    @ApiBearerAuth()
+    @GroupRole('owner')
+    @UseGuards(JwtGuard, GroupGuard)
+    kickMember(@Param('userUUID') userUUID: string, @GetGroup() group: Group) {
+        return this.groupsDeleteService.kickGroupMember(userUUID, group);
+    }
 }
