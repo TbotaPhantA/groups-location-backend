@@ -38,7 +38,7 @@ export class GroupsCreateService {
         const protocol = process.env.APPLICATION_PROTOCOL;
         const host = process.env.APPLICATION_HOST;
         const port = process.env.APPLICATION_PORT;
-        const inviteLink = `${protocol}://${host}:${port}/groups/useInvite/${redisNewGroupInviteValue.inviteKey}`; 
+        const inviteLink = `${protocol}://${host}:${port}/groups/useInvite/${redisNewGroupInviteValue.groupUUID}/${redisNewGroupInviteValue.inviteKey}`; 
         return {
             inviteLink: inviteLink
         }

@@ -102,15 +102,16 @@ export class GroupsController {
         return this.groupsCreateService.createInviteLink(uuid);
     }
 
-    @Put('useInvite/:inviteKey')
+    @Put('useInvite/:groupUUID/:inviteKey')
     @ApiOperation({ summary: "If inviteKey is valid, adds current user to group members" })
     @ApiResponse({
         status: HttpStatus.OK,
         description: "If inviteLink is valid, adds current user to group members",
     })
     @ApiBearerAuth()
-    @UseGuards(JwtGuard)
-    useInviteLink(@Param('inviteKey') inviteKey: string, @GetAuthenticatedUser() user: User ): void {
-       this.groupsUpdateService.useInviteLink(inviteKey, user);
+    @GroupRole('not member')
+    @UseGuards(JwtGuard, GroupGuard)
+    useInviteLink(@Param('inviteKey') inviteKey: string, @GetAuthenticatedUser() user: User): Promise<void> {
+       return this.groupsUpdateService.useInviteLink(inviteKey, user);
     }
 }
