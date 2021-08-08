@@ -25,8 +25,7 @@ export class RedisService {
 
         const inviteValue = await this.cacheManager.get<RedisGroupInviteValue>(`GroupInvite:${inviteKey}`)
         if (!inviteValue) throw new HttpException("Such an invite either expired or doesn't exist", HttpStatus.BAD_REQUEST)
-
-        console.log("del() function of cacheManager returns:", await this.cacheManager.del(`GroupInvite:${inviteKey}`))
+        await this.cacheManager.del(`GroupInvite:${inviteKey}`);
 
         return inviteValue; 
     }
