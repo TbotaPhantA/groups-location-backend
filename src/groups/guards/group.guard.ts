@@ -6,43 +6,53 @@ import { Group } from "../groups.entity";
 import { GroupsReadService } from '../services/groups-read.service';
 import { GroupRoleType, ROLE_KEY } from '../group-role.decorator'
 import { UsersGroups } from "../users_groups.entity";
+import { UsersService } from "src/users/users.service";
 
 
 @Injectable()
 export class GroupGuard implements CanActivate {
 
     constructor(private readonly groupsReadService: GroupsReadService,
+                private readonly usersService: UsersService,
                 private readonly reflector: Reflector) {}
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
 
         const request = context.switchToHttp().getRequest()
-        const uuidOfGroup = this.getUUIDOfGroupFromRequest(request);
 
+        const uuidOfGroup = this.getUUIDOfGroupFromRequest(request);
         const group = await this.getGroupFromDBByUUID(uuidOfGroup);
         // put group entity to request, for @GetGroup param decorator in controller methods which use this guard
         request.group = group;
         
-        const currenterUser = this.getCurrentUserFromRequest(request)
+        const uuidOfCurrentUser = this.getCurrentUserFromRequest(request).uuid
+        const currentUser = await this.getUserFromDBByUUID(uuidOfCurrentUser);
+        // put user entity to request, for @GetAuthorizedUser decorator in controller methods which use this guard
+        request.user = currentUser;
 
         const role: GroupRoleType = this.reflector.get<GroupRoleType>(ROLE_KEY, context.getHandler())
 
         if (role === 'owner') {
-            this.assertCurrentUserIsOwnerOfGroup(group, currenterUser); 
+            this.assertCurrentUserIsOwnerOfGroup(group, currentUser); 
             return true;
         } 
         
         if (role === 'member') {
-            this.assertCurrentUserIsMemberOfGroup(group, currenterUser);
+            this.assertCurrentUserIsMemberOfGroup(group, currentUser);
+            return true;
+        }
+
+        if (role === 'not member') {
+            this.assertCurrentUserIsNotMemberOfGroup(group, currentUser);
             return true;
         }
 
         throw new HttpException('No role decorator on this endpoint, need to add Role Decorator to controller method, for GroupGuard to work', HttpStatus.INTERNAL_SERVER_ERROR)
     }
 
-    private getUUIDOfGroupFromRequest(request: Request) {
+    private getUUIDOfGroupFromRequest(request: Request): string {
 
-        const uuidOfGroup = request.params?.uuid;
+        const uuidOfGroup = request.params?.uuid || request.params?.groupUUID;
         if (!uuidOfGroup) throw new HttpException("There is no UUID of group users in params", HttpStatus.BAD_REQUEST); 
 
         return uuidOfGroup;
@@ -54,6 +64,12 @@ export class GroupGuard implements CanActivate {
         if (!group) throw new HttpException("There is not Group with this UUID", HttpStatus.BAD_REQUEST);
 
         return group;
+    }
+
+    private async getUserFromDBByUUID(uuidOfUser) {
+        const user = await this.usersService.getUserByUUID(uuidOfUser);
+
+        return user;
     }
 
     private getCurrentUserFromRequest(request) {
@@ -70,8 +86,17 @@ export class GroupGuard implements CanActivate {
     }
     
     private assertCurrentUserIsMemberOfGroup(group: Group, currentUser: User): void {
-        const users_groups: UsersGroups[] = group.usersGroups
-        const userWithSameUUID = users_groups.find((user_group) => user_group.uuid === currentUser.uuid)
-        if (!userWithSameUUID) throw new HttpException("Current user is not member of this group", HttpStatus.FORBIDDEN);
+        const coincidence = group.usersGroups.find((groupUserGroup) => {
+            return !!currentUser.usersGroups.find((userUserGroup) => groupUserGroup.uuid === userUserGroup.uuid)
+        })
+        if (!coincidence) throw new HttpException("Current user is not owner of this group", HttpStatus.FORBIDDEN);
     }
+
+    private assertCurrentUserIsNotMemberOfGroup(group: Group, currentUser: User) {
+        const coincidence = group.usersGroups.find((groupUserGroup) => {
+            return !!currentUser.usersGroups.find((userUserGroup) => groupUserGroup.uuid === userUserGroup.uuid)
+        })
+        if (coincidence) throw new HttpException("Current user is already member of the group", HttpStatus.FORBIDDEN);
+    }
+
 }
