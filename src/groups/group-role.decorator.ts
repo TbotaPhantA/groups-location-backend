@@ -1,6 +1,6 @@
 import { SetMetadata } from "@nestjs/common";
 
-export type GroupRoleType = 'owner' | 'member';
+export type GroupRoleType = 'owner' | 'member'| 'not member';
 
 export const ROLE_KEY = 'role';
 
