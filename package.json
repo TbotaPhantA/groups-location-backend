@@ -33,6 +33,7 @@
     "bcryptjs": "^2.4.3",
     "cache-manager": "^3.4.4",
     "cache-manager-redis-store": "^2.0.0",
+    "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
     "cookie-parser": "^1.4.5",
     "ioredis": "^4.27.6",
@@ -45,7 +46,6 @@
     "rxjs": "^7.2.0",
     "swagger-ui-express": "^4.1.6",
     "typeorm": "^0.2.34",
-    "typescript-class-validator": "^0.0.6",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
