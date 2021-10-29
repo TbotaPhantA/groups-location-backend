@@ -1,4 +1,4 @@
-import { CacheModule, Module } from '@nestjs/common';
+import { CacheModule, MiddlewareConsumer, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
@@ -13,6 +13,7 @@ import { Mark } from './marks/marks.entity';
 import { NativeAuthModule } from './native-auth/native-auth.module';
 import { RefreshToken } from './native-auth/refresh_tokens.entity';
 import { RedisModule } from './redis/redis.module';
+import { JwtMW } from './middleware/jwtMW';
 
 @Module({
   imports: [
@@ -37,4 +38,8 @@ import { RedisModule } from './redis/redis.module';
     NativeAuthModule,
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(JwtMW).forRoutes('*');
+  }
+}

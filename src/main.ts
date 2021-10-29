@@ -9,7 +9,6 @@ async function start() {
   const app = await NestFactory.create(AppModule);
 
   app.use(cookieparser());
-  app.use(JwtMW);
 
   const config = new DocumentBuilder()
     .setTitle('Group Location API')
