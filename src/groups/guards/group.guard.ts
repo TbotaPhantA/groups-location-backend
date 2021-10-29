@@ -11,7 +11,6 @@ import { User } from 'src/users/users.entity';
 import { Group } from '../groups.entity';
 import { GroupsReadService } from '../services/groups-read.service';
 import { GroupRoleType, ROLE_KEY } from '../group-role.decorator';
-import { UsersGroups } from '../users_groups.entity';
 import { UsersService } from 'src/users/users.service';
 
 @Injectable()
@@ -30,7 +29,7 @@ export class GroupGuard implements CanActivate {
     // put group entity to request, for @GetGroup param decorator in controller methods which use this guard
     request.group = group;
 
-    const uuidOfCurrentUser = this.getCurrentUserFromRequest(request).uuid;
+    const uuidOfCurrentUser = request.jwtPayload.uuid;
     const currentUser = await this.getUserFromDBByUUID(uuidOfCurrentUser);
     // put user entity to request, for @GetAuthorizedUser decorator in controller methods which use this guard
     request.user = currentUser;
@@ -87,17 +86,6 @@ export class GroupGuard implements CanActivate {
     const user = await this.usersService.getUserByUUID(uuidOfUser);
 
     return user;
-  }
-
-  private getCurrentUserFromRequest(request) {
-    const currUser = request.user;
-    if (!currUser)
-      throw new HttpException(
-        "There is not user in request, probably you didn't apply JwtGuard, or applied it after This GroupOwnerGuard",
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-
-    return currUser;
   }
 
   private assertCurrentUserIsOwnerOfGroup(
