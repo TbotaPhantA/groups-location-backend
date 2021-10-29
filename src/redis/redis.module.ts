@@ -4,8 +4,8 @@ import { OptimisticLockCanNotBeUsedError } from 'typeorm';
 import { RedisService } from './redis.service';
 
 export type RedisModuleOptions = {
-  host: string,
-  port: number,
+  host: string;
+  port: number;
 };
 
 export const REDIS_CLIENT = 'REDIS_CLIENT';
@@ -17,7 +17,6 @@ export const REDIS_CLIENT = 'REDIS_CLIENT';
 })
 export class RedisModule {
   // private static redisClient: Redis.Redis;
-
   // static register(options: RedisModuleOptions): DynamicModule {
   //   if (!this.redisClient) this.redisClient = new Redis()
   //   console.log('this.redisClient =', this.redisClient);
@@ -33,4 +32,4 @@ export class RedisModule {
   //     exports: [RedisService]
   //   }
   // }
-} 
+}

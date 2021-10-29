@@ -8,6 +8,6 @@ import { UsersGroups } from 'src/groups/users_groups.entity';
 @Module({
   providers: [MarksService],
   controllers: [MarksController],
-  imports: [TypeOrmModule.forFeature([Mark, UsersGroups])]
+  imports: [TypeOrmModule.forFeature([Mark, UsersGroups])],
 })
 export class MarksModule {}

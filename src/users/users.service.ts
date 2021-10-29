@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Injectable, UsePipes, ValidationPipe } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { validate, validateOrReject } from 'class-validator';
 import { Repository } from 'typeorm';
@@ -7,55 +13,77 @@ import { User } from './users.entity';
 
 @Injectable()
 export class UsersService {
+  constructor(
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
+  ) {}
 
-    constructor(
-        @InjectRepository(User) private readonly userRepository: Repository<User>
-    ) { }
+  async getAllUsers(): Promise<User[]> {
+    return await this.userRepository.find();
+  }
 
-    async getAllUsers(): Promise<User[]> {
-        return await this.userRepository.find();
+  async getUserByUUID(userUuid: string): Promise<User> {
+    try {
+      const user = await this.userRepository.findOne(userUuid, {
+        relations: ['usersGroups'],
+      });
+      if (!user)
+        throw new HttpException(
+          'there is no user with such uuid',
+          HttpStatus.BAD_REQUEST,
+        );
+      return this.clearUserFromPassword(user);
+    } catch (e) {
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     }
+  }
 
-    async getUserByUUID(userUuid: string): Promise<User> {
-        try {
-            const user = await this.userRepository.findOne(userUuid, {relations: ['usersGroups']})
-            if (!user) throw new HttpException("there is no user with such uuid", HttpStatus.BAD_REQUEST);
-            return this.clearUserFromPassword(user);
-        } catch (e) {
-            throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
-        }
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const user = this.userRepository.findOne({ email: email });
+    return user;
+  }
+
+  async createUser(dto: CreateUserInputDto): Promise<User> {
+    // server won't crash if this Exception will be thrown, client will receive correct error message as reponse, because they throw HttpException()
+    await this.assertCreateUserDtoDataIsCorrect(dto);
+    await this.assertUserInDtoHasUniqueEmail(dto);
+    return await this.userRepository.save(dto);
+  }
+
+  private async assertCreateUserDtoDataIsCorrect(
+    dto: CreateUserInputDto,
+  ): Promise<void> {
+    try {
+      const dtoInstance = new CreateUserInputDto(
+        dto.name,
+        dto.email,
+        dto.password,
+      ); // we need instance for class-validator to work
+      await validateOrReject(dtoInstance);
+    } catch (errors) {
+      const extractedValidationProblems = errors
+        .map((err) => Object.values(err.constraints))
+        .reduce((acc, val) => acc.concat(val), [])
+        .join(', ');
+      throw new HttpException(
+        'Validation of input during user creation is failed: ' +
+          extractedValidationProblems,
+        HttpStatus.BAD_REQUEST,
+      );
     }
+  }
 
-    async getUserByEmail(email: string): Promise<User | undefined> {
-        const user = this.userRepository.findOne({ email: email })
-        return user;
-    }
+  private async assertUserInDtoHasUniqueEmail(
+    dto: CreateUserInputDto,
+  ): Promise<void> {
+    if (await this.userRepository.findOne({ email: dto.email }))
+      throw new HttpException(
+        'User with this email already exists',
+        HttpStatus.BAD_REQUEST,
+      );
+  }
 
-    async createUser(dto: CreateUserInputDto): Promise<User>{
-        // server won't crash if this Exception will be thrown, client will receive correct error message as reponse, because they throw HttpException()
-        await this.assertCreateUserDtoDataIsCorrect(dto); 
-        await this.assertUserInDtoHasUniqueEmail(dto);
-        return await this.userRepository.save(dto);
-    }
-
-    private async assertCreateUserDtoDataIsCorrect(dto: CreateUserInputDto): Promise<void> {
-        try {
-            const dtoInstance = new CreateUserInputDto(dto.name, dto.email, dto.password); // we need instance for class-validator to work
-            await validateOrReject(dtoInstance);
-        } catch (errors) {
-            const extractedValidationProblems = errors.map(err => Object.values(err.constraints)).reduce((acc, val) => acc.concat(val), []).join(', ') 
-            throw new HttpException('Validation of input during user creation is failed: ' + extractedValidationProblems, HttpStatus.BAD_REQUEST)
-        }
-    }
-
-    private async assertUserInDtoHasUniqueEmail(dto: CreateUserInputDto): Promise<void> {
-        if (await this.userRepository.findOne({ email: dto.email })) throw new HttpException('User with this email already exists', HttpStatus.BAD_REQUEST)
-    }
-
-    private clearUserFromPassword(user: User): User {
-        delete user.password
-        return user;
-    }
-    
-
+  private clearUserFromPassword(user: User): User {
+    delete user.password;
+    return user;
+  }
 }

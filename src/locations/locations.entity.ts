@@ -1,13 +1,11 @@
-import { Point } from "geojson";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Point } from 'geojson';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Location {
+  @PrimaryGeneratedColumn('uuid')
+  uuid: string;
 
-    @PrimaryGeneratedColumn('uuid')
-    uuid: string;
-
-    @Column('point')
-    coordinates: Point;
-
+  @Column('point')
+  coordinates: Point;
 }

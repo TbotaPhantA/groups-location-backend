@@ -15,7 +15,12 @@ import { UsersModule } from 'src/users/users.module';
 
 @Module({
   controllers: [GroupsController],
-  providers: [GroupsCreateService, GroupsUpdateService, GroupsReadService, GroupsDeleteService],
+  providers: [
+    GroupsCreateService,
+    GroupsUpdateService,
+    GroupsReadService,
+    GroupsDeleteService,
+  ],
   imports: [
     TypeOrmModule.forFeature([Group, User, UsersGroups, Location]),
     NativeAuthModule,

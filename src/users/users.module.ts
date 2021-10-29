@@ -11,8 +11,6 @@ import { RefreshToken } from 'src/native-auth/refresh_tokens.entity';
   providers: [UsersService],
   controllers: [UsersController],
   imports: [TypeOrmModule.forFeature([User, Group, UsersGroups, RefreshToken])],
-  exports: [
-    UsersService,
-  ]
+  exports: [UsersService],
 })
 export class UsersModule {}

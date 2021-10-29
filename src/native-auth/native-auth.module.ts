@@ -14,15 +14,12 @@ import { RefreshToken } from './refresh_tokens.entity';
     TypeOrmModule.forFeature([RefreshToken]),
     UsersModule,
     JwtModule.register({
-      secret: process.env.SECRET_KEY || 'zabor', 
+      secret: process.env.SECRET_KEY || 'zabor',
       signOptions: {
-        expiresIn: '50m'
-      }
+        expiresIn: '50m',
+      },
     }),
   ],
-  exports: [
-    NativeAuthService,
-    JwtModule
-  ]
+  exports: [NativeAuthService, JwtModule],
 })
 export class NativeAuthModule {}
