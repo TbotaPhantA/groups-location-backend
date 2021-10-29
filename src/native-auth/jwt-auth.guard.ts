@@ -5,8 +5,9 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Request } from 'express';
 import { Observable } from 'rxjs';
+import { UNAUTHORIZED_EXCEPTION_MESSAGE } from 'src/helpers/errors';
+import { JwtPayload, RequestWithJwtPayload } from 'src/types/RequestTypes';
 
 @Injectable()
 export class JwtGuard implements CanActivate {
@@ -15,28 +16,29 @@ export class JwtGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    const request = context.switchToHttp().getRequest();
+    const request: RequestWithJwtPayload = context.switchToHttp().getRequest();
 
-    return this.validateRequest(request);
+    JwtGuard.assertJwtPayloadInRequest(request);
+    return true;
   }
 
-  private validateRequest(request): boolean {
-    const authHeader = request.headers.authorization;
+  /**
+   * THIS CAN BE USED ONLY IF JWTGUARD IS APPLIED
+   * returns jwtPayload from request if it presents
+   * otherwise throws UnauthorizedException
+   */
+  static getJwtPayloadFromRequest(req: RequestWithJwtPayload): JwtPayload {
+    JwtGuard.assertJwtPayloadInRequest(req);
+    return req.jwtPayload;
+  }
 
-    const [bearer, token] = authHeader?.split(' ') || [undefined, undefined];
-
-    if (bearer !== 'Bearer' || !token)
-      throw new UnauthorizedException(
-        'Incorrect Authentication Header, User is not authorized!',
-      );
-
-    try {
-      const user = this.jwtService.verify(token);
-      request.user = user;
-    } catch {
-      throw new UnauthorizedException('Invalid Token, User is not authorized');
-    }
-
-    return true;
+  /**
+   * thorws an UnauthorizedException if request doens't have jwtPayload
+   */
+  private static assertJwtPayloadInRequest(
+    request: RequestWithJwtPayload,
+  ): void {
+    if (!request.jwtPayload)
+      throw new UnauthorizedException(UNAUTHORIZED_EXCEPTION_MESSAGE);
   }
 }
